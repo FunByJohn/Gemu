@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include <memory>
 
 class Entity {
@@ -12,7 +13,7 @@ private:
 public:
 	typedef std::unique_ptr<Entity> ptr;
 
-	virtual void tick(const sf::Time& dt);
+	virtual void tick(const sf::Time& dt, std::vector<ptr>& entities);
 	virtual void render(sf::Uint8* pixels) = 0;
 
 	virtual ~Entity();
