@@ -7,16 +7,7 @@
 
 #include "Consts.hpp"
 #include "Entity.hpp"
-
-void setPixel(sf::Uint8* pixels, int x, int y, sf::Color color) {
-    if(x < 0 || x >= screenWidth || y < 0 || y >= screenHeight) return;
-
-    int i = 4 * (y * screenWidth + x);
-    pixels[i] = color.r;
-    pixels[i+1] = color.g;
-    pixels[i+2] = color.b;
-    pixels[i+3] = color.a;
-}
+#include "Player.hpp"
 
 void clearScreen(sf::Uint8* pixels) {
     for(int i = 0; i < screenWidth * screenHeight * 4; i++) pixels[i] = 0xFF;
@@ -51,6 +42,8 @@ int main() {
 
     std::vector<Entity::ptr> entities;
 
+    entities.emplace_back(new Player({40, 40}));
+
     sf::Time frameTime = sf::seconds(1.f / frameRate);
     sf::Time acc = sf::Time::Zero;
     sf::Clock clock;
@@ -68,7 +61,9 @@ int main() {
         if(acc >= frameTime) {
             acc -= frameTime;
 
-            for(auto& ptr : entities) ptr->tick(frameTime);
+            for(auto& ptr : entities) ptr->tick(frameTime, entities);
+
+            clearScreen(pixels);
             for(auto& ptr : entities) ptr->render(pixels);
         }
 
@@ -80,8 +75,6 @@ int main() {
 
         // end the current frame
         window.display();
-
-        clearScreen(pixels);
     }
 
     delete[] pixels;

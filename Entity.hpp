@@ -5,7 +5,7 @@
 #include <memory>
 
 class Entity {
-private:
+protected:
 	sf::Time animation;
 	sf::Vector2f pos;
 	sf::Vector2f vel;
