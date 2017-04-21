@@ -28,7 +28,7 @@ float abssin(float n) {
 
 int main() {
     // create the window
-    sf::RenderWindow window(sf::VideoMode(screenWidth * screenScale, screenHeight * screenScale), "Fantasy");
+    sf::RenderWindow window(sf::VideoMode(screenWidth * screenScale, screenHeight * screenScale), "Gemu");
 
     window.setVerticalSyncEnabled(false);
 
