@@ -6,7 +6,7 @@ class Player : public Entity {
 public:
 	Player(sf::Vector2f position);
 
-	void render(sf::Uint8* pixels);
+	void render(sf::Uint8* pixels, sf::FloatRect camera);
 };
 
 
