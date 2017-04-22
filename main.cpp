@@ -40,6 +40,8 @@ int main() {
     screenContainer.setTexture(screen);
     screenContainer.setScale(1.0 * screenScale, 1.0 * screenScale);
 
+    sf::FloatRect camera(0, 0, screenWidth, screenHeight);
+
     std::vector<Entity::ptr> entities;
 
     entities.emplace_back(new Player({40, 40}));
@@ -64,7 +66,7 @@ int main() {
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
             clearScreen(pixels);
-            for(auto& ptr : entities) ptr->render(pixels);
+            for(auto& ptr : entities) ptr->render(pixels, camera);
         }
 
         window.clear(sf::Color::White);
