@@ -21,7 +21,7 @@ int main() {
     // create the window
     sf::RenderWindow window(sf::VideoMode(screenWidth * screenScale, screenHeight * screenScale), "Gemu");
 
-    window.setVerticalSyncEnabled(false);
+    window.setVerticalSyncEnabled(true);
 
     sf::Texture screen;
     if(!screen.create(screenWidth, screenHeight)) {
@@ -42,7 +42,7 @@ int main() {
 
     sf::FloatRect camera(0, 0, screenWidth, screenHeight);
 
-    Player* player = new Player({40, 40});
+    Player* player = new Player({screenWidth * 0.5f, screenHeight * 0.5f});
 
     std::vector<Entity::ptr> entities;
     entities.emplace_back(player);
