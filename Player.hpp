@@ -6,7 +6,6 @@
 
 class Player : public Entity {
 private:
-	bool dead = false;
 	bool madeBubble = false;
 
 	std::array<std::pair<float, int>, 2> bubbleConfs;

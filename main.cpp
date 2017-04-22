@@ -91,6 +91,12 @@ int main() {
             for(auto& ptr : entities) cop.push_back(ptr.get());
             for(auto ptr : cop) ptr->tick(fTime, entities);
 
+            // Remove dead entities
+            entities.erase(std::remove_if(entities.begin(), entities.end(),
+                                         [](auto& ptr){ return ptr->dead; }),
+                            entities.end());
+
+
             // Update camera
             //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
             //camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);

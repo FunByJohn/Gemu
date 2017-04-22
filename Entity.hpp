@@ -14,6 +14,7 @@ public:
 	typedef std::vector<ptr> container;
 
 	sf::Vector2f pos;
+	bool dead = false;
 
 	virtual void tick(const sf::Time& dt, container& entities);
 	virtual void render(sf::Uint8* pixels, sf::FloatRect& camera) = 0;
