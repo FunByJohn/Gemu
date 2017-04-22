@@ -16,4 +16,3 @@ void Player::render(sf::Uint8* pixels) {
 		}
 	}
 }
-
