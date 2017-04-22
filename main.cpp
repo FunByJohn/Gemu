@@ -42,10 +42,10 @@ int main() {
 
     sf::FloatRect camera(0, 0, screenWidth, screenHeight);
 
-    Player player({40, 40});
+    Player* player = new Player({40, 40});
 
     std::vector<Entity::ptr> entities;
-    entities.emplace_back(&player);
+    entities.emplace_back(player);
 
     sf::Time frameTime = sf::seconds(1.f / frameRate);
     sf::Time acc = sf::Time::Zero;
