@@ -5,6 +5,7 @@
 #include <cmath>
 
 Bubble::Bubble(sf::Vector2f pos, float radius) {
+	id = Entity::BUBBLE;
 	this->pos = pos;
   this->targetRadius = radius;
   this->radius = 0.0f;

@@ -6,6 +6,7 @@
 
 Enemy::Enemy(sf::Vector2f pos, Player* player) : player(player) {
 	this->pos = pos;
+	id = Entity::ENEMY;
 }
 
 void Enemy::tick(const sf::Time& dt, Entity::container& entities) {

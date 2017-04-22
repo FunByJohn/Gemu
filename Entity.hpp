@@ -13,6 +13,13 @@ public:
 	typedef std::unique_ptr<Entity> ptr;
 	typedef std::vector<ptr> container;
 
+	enum ID {
+		PLAYER,
+		BUBBLE,
+		ENEMY
+	};
+
+	ID id;
 	sf::Vector2f pos;
 	bool dead = false;
 
