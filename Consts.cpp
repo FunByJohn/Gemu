@@ -6,4 +6,7 @@ int screenScale = 2;
 
 int frameRate = 60;
 
+float maxCameraX = screenWidth + 100;
+float maxCameraY = screenHeight;
+
 float drawSlowdown = 10.f;
