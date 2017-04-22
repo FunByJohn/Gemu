@@ -118,7 +118,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
   }
 }
 
-void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
+void Player::render(sf::Uint8* pixels, sf::FloatRect& camera) {
   float anim = animation.asSeconds();
   float fillPercent = (cooldown < 0.001f ? 1.0f : (1.0f - (cooldown / cooldownTime))); // 0.5f + 0.5f * sin(anim * 5.0f);
   float innerRadius = 15.0f; // 30
