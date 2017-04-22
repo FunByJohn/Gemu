@@ -7,6 +7,8 @@ private:
 	Player* player;
 	float angle = 0;
 
+	const float radius = 20.f;
+
 public:
 	Enemy(sf::Vector2f pos, Player* player);
 

@@ -1,5 +1,6 @@
 #include "Enemy.hpp"
 #include "Util.hpp"
+#include "Consts.hpp"
 
 #include <cmath>
 
@@ -13,6 +14,11 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 	const float speed = 400.f;
 	float fdt = dt.asSeconds();
 
+	if(pos.x - radius <= 0 && vel.x < 0 ||
+	   pos.x + radius >= screenWidth && vel.x > 0) angle = atan2(vel.y, -vel.x);
+	if(pos.y - radius <= 0 && vel.y < 0 ||
+	   pos.y + radius >= screenHeight && vel.y > 0) angle = atan2(-vel.y, vel.x);
+
 	float toPlayer = atan2(player->pos.y - pos.y, player->pos.x - pos.x);
 	//if(hypotSqPred(player->pos.y - posy, player->pos.x - pos.x, 1.f))
 	angle = rotateTo(angle, toPlayer, M_PI * fdt);
@@ -22,9 +28,8 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 
 void Enemy::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	const float anim = animation.asSeconds();
-	const float radius = 20.f + 3 * sin(anim * 3.4f + 2.f);
 	const float holeRadius = 15.f + 2 * sin(anim * 10.f);
-	const float holeDistance = 17.f;
+	const float holeDistance = 10.f;
 	float holeAngle = angle + M_PI;
 
 	for(int x = -radius; x < radius; x++) {
