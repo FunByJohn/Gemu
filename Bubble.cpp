@@ -30,6 +30,14 @@ void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
 
   if (radius < targetRadius) radius += 100.0f * fdt;
   if (radius > targetRadius) radius -= 100.0f * fdt;
+
+  if (aliveTime > totalAliveTime) {
+    targetRadius = 0.0f;
+  }
+
+  if (aliveTime > totalAliveTime && radius < 1.0f) {
+    dead = true;
+  }
 }
 
 void Bubble::render(sf::Uint8* pixels, sf::FloatRect& camera) {
