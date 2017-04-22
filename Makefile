@@ -6,11 +6,11 @@ OBJS = $(SOURCES:.cpp=.o)
 
 ifeq ($(UNAME), Darwin)
 	CXXFLAGS = -F/Library/Frameworks -framework SFML -framework sfml-window -framework sfml-graphics -framework sfml-system -framework Cocoa
-else	
+else
 	CXXFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 endif
 
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++14
 
 
 $(EXE): $(OBJS)

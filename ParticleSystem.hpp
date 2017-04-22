@@ -1,4 +1,5 @@
 #include <vector>
+#include <memory>
 
 #include "Entity.hpp"
 
@@ -7,6 +8,8 @@ private:
 	sf::Vector2f acc;
 
 public:
+	typedef std::unique_ptr<Particle> ptr;
+
 	enum Type {
 		PIXEL
 	};
@@ -23,3 +26,14 @@ public:
 	void render(sf::Uint8* pixels, sf::FloatRect camera);
 };
 
+
+class ParticleSystem : public Entity {
+private:
+	std::vector<Particle::ptr> particles;
+
+public:
+	void addParticle(Particle* particle);
+
+	void tick(const sf::Time& dt, Entity::container& entities);
+	void render(sf::Uint8* pixels, sf::FloatRect camera);
+};

@@ -8,6 +8,7 @@
 #include "Consts.hpp"
 #include "Entity.hpp"
 #include "Player.hpp"
+#include "ParticleSystem.hpp"
 
 void clearScreen(sf::Uint8* pixels) {
     for(int i = 0; i < screenWidth * screenHeight * 4; i++) pixels[i] = 0xFF;
@@ -42,9 +43,11 @@ int main() {
 
     sf::FloatRect camera(0, 0, screenWidth, screenHeight);
 
+    ParticleSystem* particleSystem = new ParticleSystem();
     Player* player = new Player({screenWidth * 0.5f, screenHeight * 0.5f});
 
     std::vector<Entity::ptr> entities;
+    entities.emplace_back(particleSystem);
     entities.emplace_back(player);
 
     sf::Time frameTime = sf::seconds(1.f / frameRate);
