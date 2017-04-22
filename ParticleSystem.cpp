@@ -74,4 +74,3 @@ void ParticleSystem::tick(const sf::Time& dt, Entity::container& entities) {
 void ParticleSystem::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	for(auto& particle : particles) particle->render(pixels, camera);
 }
-
