@@ -85,7 +85,8 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 							}
 
 							if(maxDist - minDist <= distEps) {
-								entities.emplace_back(new Bubble(center, (maxDist + minDist) / 2));
+								float r = std::sqrt((maxDist + minDist) / 2.f);
+								entities.emplace_back(new Bubble(center, r));
 								madeBubble = true;
 							}
 						}

@@ -13,6 +13,10 @@ endif
 
 CXXFLAGS += -std=c++14 -Wno-narrowing
 
+ifdef DEBUG
+	CXXFLAGS += -O0 -ggdb
+endif
+
 
 $(EXE): $(OBJS)
 	$(CXX) $^ -o $(EXE) $(CXXFLAGS)

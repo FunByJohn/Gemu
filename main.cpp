@@ -87,16 +87,18 @@ int main() {
             //if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
 
             sf::Time fTime = player->state == Player::FREE ? frameTime : frameTime / drawSlowdown;
-            for(auto& ptr : entities) ptr->tick(fTime, entities);
+            std::vector<Entity*> cop;
+            for(auto& ptr : entities) cop.push_back(ptr.get());
+            for(auto ptr : cop) ptr->tick(fTime, entities);
 
             // Update camera
             //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
             //camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
+            clearScreen(pixels);
+            for(auto& ptr : entities) ptr->render(pixels, camera);
 
         }
 
-        clearScreen(pixels);
-        for(auto& ptr : entities) ptr->render(pixels, camera);
 
 
         window.clear(sf::Color::White);
