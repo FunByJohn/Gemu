@@ -1,15 +1,20 @@
 #include <cmath>
+#include <iostream>
 
 #include "ParticleSystem.hpp"
 #include "Player.hpp"
 #include "Util.hpp"
 #include "Consts.hpp"
+#include "Bubble.hpp"
 
 Player::Player(sf::Vector2f position) {
 	pos = position;
 	drawAngle = 0.0f;
 	eyeIrisAngle = 0.0f;
 	cooldown = 0.0f;
+
+	bubbleConfs[0] = {250.f, 6};
+	bubbleConfs[1] = {600.f, 7};
 }
 
 void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
@@ -31,6 +36,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 				if (cooldown <= 0.0f && sf::Joystick::isButtonPressed(0, 0)) {
 					state = DRAWING;
 					// init drawing
+					madeBubble = false;
 					followLastPassedIndex = 0;
 					followPoints.clear();
 					followPoints.emplace_back(pos);
@@ -57,6 +63,35 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 				if (!hypotSqPred(drawCurr.x - drawLast.x, drawCurr.y - drawLast.y, drawLineDistance)) {
 					drawLast = drawCurr;
 					followPoints.emplace_back(drawCurr);
+
+					// Check bubble
+					for(auto& conf : bubbleConfs) {
+						auto bubblePoints = conf.second;
+						auto distEps = conf.first;
+
+						if(followPoints.size() >= bubblePoints && !madeBubble) {
+							sf::Vector2f center(0, 0);
+							for(auto it = followPoints.rbegin(); it != followPoints.rbegin() + bubblePoints; it++) {
+								center += *it / (float)bubblePoints;
+							}
+
+							float minDist = 100000.f;
+							float maxDist = 0.f;
+							for(auto it = followPoints.rbegin(); it != followPoints.rbegin() + bubblePoints; it++) {
+								sf::Vector2f p = center - *it;
+								float d = hypotSq(p.x, p.y);
+								minDist = std::min(minDist, d);
+								maxDist = std::max(maxDist, d);
+							}
+
+							if(maxDist - minDist <= distEps) {
+								entities.emplace_back(new Bubble(center, (maxDist + minDist) / 2));
+								madeBubble = true;
+							}
+						}
+					}
+
+					// Finish drawing
 					if (followPoints.size() == drawNumClouds) {
 						state = FOLLOWING;
 						// init following

@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Entity.hpp"
+#include <utility>
+#include <array>
 
 class Player : public Entity {
 private:
 	bool dead = false;
+	bool madeBubble = false;
+
+	std::array<std::pair<float, int>, 2> bubbleConfs;
 
 public:
 	enum State {
