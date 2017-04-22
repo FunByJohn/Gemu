@@ -40,9 +40,12 @@ int main() {
     screenContainer.setTexture(screen);
     screenContainer.setScale(1.0 * screenScale, 1.0 * screenScale);
 
-    std::vector<Entity::ptr> entities;
+    sf::FloatRect camera(0, 0, screenWidth, screenHeight);
 
-    entities.emplace_back(new Player({40, 40}));
+    Player player({40, 40});
+
+    std::vector<Entity::ptr> entities;
+    entities.emplace_back(&player);
 
     sf::Time frameTime = sf::seconds(1.f / frameRate);
     sf::Time acc = sf::Time::Zero;
@@ -64,7 +67,7 @@ int main() {
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
             clearScreen(pixels);
-            for(auto& ptr : entities) ptr->render(pixels);
+            for(auto& ptr : entities) ptr->render(pixels, camera);
         }
 
         window.clear(sf::Color::White);
