@@ -1,4 +1,5 @@
 #include <array>
+#include <cassert>
 #include <initializer_list>
 
 template<std::size_t N>

@@ -16,7 +16,7 @@ public:
 	sf::Vector2f pos;
 
 	virtual void tick(const sf::Time& dt, container& entities);
-	virtual void render(sf::Uint8* pixels, sf::FloatRect camera) = 0;
+	virtual void render(sf::Uint8* pixels, sf::FloatRect& camera) = 0;
 
 	virtual ~Entity();
 };

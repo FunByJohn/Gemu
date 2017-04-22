@@ -12,6 +12,7 @@
 #include "Entity.hpp"
 #include "Player.hpp"
 #include "ParticleSystem.hpp"
+#include "GoodThing.hpp"
 
 void clearScreen(sf::Uint8* pixels) {
     for(int i = 0; i < screenWidth * screenHeight * 4; i++) pixels[i] = 0xFF;
@@ -25,7 +26,7 @@ int main() {
     // create the window
     sf::RenderWindow window(sf::VideoMode(screenWidth * screenScale, screenHeight * screenScale), "Gemu");
 
-    window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(false);
 
     sf::Texture screen;
     if(!screen.create(screenWidth, screenHeight)) {
@@ -45,15 +46,18 @@ int main() {
     screenContainer.setScale(1.0 * screenScale, 1.0 * screenScale);
 
 
-    ParticleSystem* particleSystem = new ParticleSystem();
     Player* player = new Player({screenWidth * 0.5f, screenHeight * 0.2f});
 
     sf::FloatRect camera(0, 0, screenWidth, screenHeight);
     Entity* cameraFocus = player;
 
     std::vector<Entity::ptr> entities;
-    entities.emplace_back(particleSystem);
+    entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
+
+    entities.emplace_back(new GoodThing({100.f, 20.f}, player));
+    entities.emplace_back(new GoodThing({380.f, 60.f}, player));
+
 
     std::deque<int> fpsAvg;
     sf::Time frameTime = sf::seconds(1.f / frameRate);
@@ -74,7 +78,7 @@ int main() {
         if(acc >= frameTime) {
             acc -= frameTime;
 
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
+            //if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
 
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
@@ -82,9 +86,11 @@ int main() {
             camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
             camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
 
-            clearScreen(pixels);
-            for(auto& ptr : entities) ptr->render(pixels, camera);
         }
+
+        clearScreen(pixels);
+        for(auto& ptr : entities) ptr->render(pixels, camera);
+
 
         window.clear(sf::Color::White);
 

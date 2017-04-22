@@ -29,6 +29,6 @@ public:
 	Player(sf::Vector2f position);
 
 	void tick(const sf::Time& dt, std::vector<Entity::ptr>& entities);
-	void render(sf::Uint8* pixels, sf::FloatRect camera);
+	void render(sf::Uint8* pixels, sf::FloatRect& camera);
 	void drawCloud(sf::Uint8* pixels, sf::Vector2f center);
 };

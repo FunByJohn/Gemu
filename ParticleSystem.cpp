@@ -31,7 +31,7 @@ void Particle::tick(const sf::Time& dt, Entity::container& entities) {
 	Entity::tick(dt, entities); // super
 }
 
-void Particle::render(sf::Uint8* pixels, sf::FloatRect camera) {
+void Particle::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	switch(type) {
 		case PIXEL:
 			setPixel(pixels, camera, pos, color);
@@ -44,6 +44,13 @@ void Particle::render(sf::Uint8* pixels, sf::FloatRect camera) {
  * PARTICLESYSTEM
  */
 
+ParticleSystem::ParticleSystem() {}
+
+
+ParticleSystem* ParticleSystem::getInstance() {
+	static ParticleSystem* ptr = new ParticleSystem();
+	return ptr;
+}
 
 void ParticleSystem::addParticle(Particle* particle) {
 	particles.emplace_back(particle);
@@ -64,7 +71,7 @@ void ParticleSystem::tick(const sf::Time& dt, Entity::container& entities) {
 					particles.end());
 }
 
-void ParticleSystem::render(sf::Uint8* pixels, sf::FloatRect camera) {
+void ParticleSystem::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	for(auto& particle : particles) particle->render(pixels, camera);
 }
 

@@ -6,9 +6,9 @@
 
 Player::Player(sf::Vector2f position) {
 	pos = position;
-  vel.x = 250.0f;
-  drawAngle = 0.0f;
-  eyeIrisAngle = 0.0f;
+    vel.x = -20.0f;
+    drawAngle = 0.0f;
+    eyeIrisAngle = 0.0f;
 }
 
 void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
@@ -100,7 +100,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
   }
 }
 
-void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
+void Player::render(sf::Uint8* pixels, sf::FloatRect& camera) {
   float anim = animation.asSeconds();
   float fillPercent = 1.0f; // 0.5f + 0.5f * sin(anim * 5.0f);
   float innerRadius = 15.0f; // 30

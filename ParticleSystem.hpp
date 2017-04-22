@@ -23,7 +23,7 @@ public:
 	Particle(std::vector<sf::Vector2f> opt, sf::Time liveTime, Type type, sf::Color color);
 
 	void tick(const sf::Time& dt, Entity::container& entities);
-	void render(sf::Uint8* pixels, sf::FloatRect camera);
+	void render(sf::Uint8* pixels, sf::FloatRect& camera);
 };
 
 
@@ -31,10 +31,14 @@ class ParticleSystem : public Entity {
 private:
 	std::vector<Particle::ptr> particles;
 
+	ParticleSystem();
+
 public:
+	static ParticleSystem* getInstance();
+
 	void addParticle(Particle* particle);
 	void explode(sf::Vector2f pos);
 
 	void tick(const sf::Time& dt, Entity::container& entities);
-	void render(sf::Uint8* pixels, sf::FloatRect camera);
+	void render(sf::Uint8* pixels, sf::FloatRect& camera);
 };
