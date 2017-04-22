@@ -49,6 +49,12 @@ void ParticleSystem::addParticle(Particle* particle) {
 	particles.emplace_back(particle);
 }
 
+void ParticleSystem::explode(sf::Vector2f pos) {
+	for(int i = 0; i < 100; i++) {
+		addParticle(new Particle({pos, {-100 + rand() % 200, -100 + rand() % 200}}, sf::seconds(1.f), Particle::PIXEL, sf::Color::Black));
+	}
+}
+
 void ParticleSystem::tick(const sf::Time& dt, Entity::container& entities) {
 	for(auto& particle : particles) particle->tick(dt, entities);
 

@@ -33,6 +33,7 @@ private:
 
 public:
 	void addParticle(Particle* particle);
+	void explode(sf::Vector2f pos);
 
 	void tick(const sf::Time& dt, Entity::container& entities);
 	void render(sf::Uint8* pixels, sf::FloatRect camera);

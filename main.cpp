@@ -74,6 +74,8 @@ int main() {
         if(acc >= frameTime) {
             acc -= frameTime;
 
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
+
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
             // Update camera
