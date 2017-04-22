@@ -77,7 +77,7 @@ void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
             continue;
           }
         }
-        setPixel(pixels, pos.x + x, pos.y + y, pixelColor);
+        setPixel(pixels, camera, {pos.x + x, pos.y + y}, pixelColor);
       }
 		}
 	}
