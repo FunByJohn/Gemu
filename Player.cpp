@@ -9,22 +9,30 @@ Player::Player(sf::Vector2f position) {
   vel.x = 250.0f;
   drawAngle = 0.0f;
   eyeIrisAngle = 0.0f;
+  cooldown = 0.0f;
 }
 
 void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
   float fdt = dt.asSeconds();
   animation += dt;
 
+  if (state == FREE && cooldown > 0.0f) {
+    cooldown -= fdt;
+  }
+
   switch(state) {
     case FREE:
     {
       vel.x += 8.0f * sf::Joystick::getAxisPosition(0, sf::Joystick::X) * fdt;
-      vel.y += 1000.0f * fdt + 7.0f * sf::Joystick::getAxisPosition(0, sf::Joystick::Y) * fdt; // 1000dt cool gravity
+      vel.y += 700.0f * fdt; // + 7.0f * sf::Joystick::getAxisPosition(0, sf::Joystick::Y) * fdt; // 1000dt cool gravity
       pos.x += vel.x * fdt;
       pos.y += vel.y * fdt;
-      if (sf::Joystick::isButtonPressed(0, 0)) {
+      if (cooldown <= 0.0f && sf::Joystick::isButtonPressed(0, 0)) {
         state = DRAWING;
         // init drawing
+        followLastPassedIndex = 0;
+        followPoints.clear();
+        followPoints.emplace_back(pos);
         if (std::hypot(vel.x, vel.y) < 1.0f) {
           drawAngle = atan2(-1.0f, 0.0f);
         } else {
@@ -33,7 +41,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
           drawCurr = drawLast;
         }
       }
-      eyeIrisAngle = atan2(vel.y, vel.x);
+      eyeIrisAngle = rotateTo(eyeIrisAngle, atan2(vel.y, vel.x), 2.0 * M_PI * fdt);
       break;
     }
     case DRAWING:
@@ -60,6 +68,8 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
         }
       }
 
+      cooldown = cooldownTime * ((float)followPoints.size() / (float)drawNumClouds);
+
       drawCurr.x += 200.0f * cos(drawAngle) * fdt;
       drawCurr.y += 200.0f * sin(drawAngle) * fdt;
 
@@ -74,37 +84,45 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
       auto prev = *(followPoints.begin());
       float accumDistance = 0.0f;
       bool updated = false;
+      int i = 0;
       for (auto& point : followPoints) {
+        //if(point == prev) continue;
         float length = std::hypot(point.x - prev.x, point.y - prev.y);
         if (accumDistance <= followMovedDistance && followMovedDistance <= accumDistance + length) {
           float t = (accumDistance - followMovedDistance) / length;
-          pos.x = point.x + (prev.x - point.x) * t;
-          pos.y = point.y + (prev.y - point.y) * t;
+          pos.x = prev.x + (prev.x - point.x) * t;
+          pos.y = prev.y + (prev.y - point.y) * t;
           updated = true;
+          eyeIrisAngle = rotateTo(eyeIrisAngle, atan2(point.y - prev.y, point.x - prev.x), 2.0 * M_PI * fdt);
+          followLastPassedIndex = i - 1;
           break;
         }
-        prev = point;
         accumDistance += length;
+        prev = point;
+        i++;
       }
       if (!updated) {
         // set player velocity to launch velocity
+        vel.x = followVelocity * cos(followLaunchAngle);
+        vel.y = followVelocity * sin(followLaunchAngle);
         state = FREE;
+        cooldown = cooldownTime;
       }
       break;
     }
   }
 
   if (pos.y > screenHeight - 20.0f && vel.y > 0.0f) {
-    vel.y = -fabs(vel.y) * 0.8f;
+    vel.y = 0.0f;
     pos.y = screenHeight - 20.0f;
   }
 }
 
 void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
   float anim = animation.asSeconds();
-  float fillPercent = 1.0f; // 0.5f + 0.5f * sin(anim * 5.0f);
+  float fillPercent = (cooldown < 0.001f ? 1.0f : (1.0f - (cooldown / cooldownTime))); // 0.5f + 0.5f * sin(anim * 5.0f);
   float innerRadius = 15.0f; // 30
-  float outerRadius = 20.0f; // 40
+  float outerRadius = 20.0f; // - (5.0f * (1.0f - fillPercent)); // 40
   float eyeRadius = innerRadius * 0.7f;
   float eyeIrisDistance = 0.8f;
   //float eyeIrisAngle = atan2(vel.y, vel.x); // 2.0f * M_PI * anim;
@@ -112,6 +130,20 @@ void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
   float eyeBorder = 0.1f;
   float angleOffset = 0.3f * sin(2.0 * M_PI * anim) - fmod(0.2f * pos.x - screenWidth * 0.5f, 2.0 * M_PI);
 
+  // draw follow clouds
+  if (state == DRAWING || state == FOLLOWING) {
+    int i = 0;
+    for (auto& followPoint : followPoints) {
+      if (i > followLastPassedIndex) {
+        drawCloud(pixels, camera, followPoint);
+      }
+      i++;
+    }
+
+    if (state == DRAWING) drawCloud(pixels, camera, drawCurr);
+  }
+
+  // draw GEMUSAN
   int r = (int)outerRadius;
 	for(int x = -r; x < r; x++) {
 		for(int y = -r; y < r; y++) {
@@ -154,18 +186,9 @@ void Player::render(sf::Uint8* pixels, sf::FloatRect camera) {
       }
 		}
 	}
-
-  // draw follow clouds
-  if (state == DRAWING || state == FOLLOWING) {
-    for (auto& followPoint : followPoints) {
-      drawCloud(pixels, followPoint);
-    }
-
-    if (state == DRAWING) drawCloud(pixels, drawCurr);
-  }
 }
 
-void Player::drawCloud(sf::Uint8* pixels, sf::Vector2f center) {
+void Player::drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f center) {
   float anim = animation.asSeconds() + (center.x + center.y);
   float offsetX = 2.0f * (0.2f * cos(12.0f * anim));
   float offsetY = 2.0f * (0.1f * sin(18.0f * anim));
@@ -176,7 +199,7 @@ void Player::drawCloud(sf::Uint8* pixels, sf::Vector2f center) {
 		for(int y = -r; y < r; y++) {
       // these will be more than just circles later OKSUKA
       if (hypotSqPred(x + offsetX, y + offsetY, radius)) {
-        setPixel(pixels, center.x + x, center.y + y, sf::Color::Black);
+        setPixel(pixels, camera, {center.x + x, center.y + y}, sf::Color::Black);
       }
     }
   }

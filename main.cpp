@@ -79,8 +79,8 @@ int main() {
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
             // Update camera
-            camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
-            camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
+            //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
+            //camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
 
             clearScreen(pixels);
             for(auto& ptr : entities) ptr->render(pixels, camera);
