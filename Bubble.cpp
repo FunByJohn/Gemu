@@ -6,8 +6,8 @@
 
 Bubble::Bubble(sf::Vector2f pos, float radius) {
 	this->pos = pos;
-  this->radius = radius;
   this->targetRadius = radius;
+  this->radius = 0.0f;
 }
 
 void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
@@ -24,10 +24,8 @@ void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
   pos.x += vel.x * fdt;
   pos.y += vel.y * fdt;
 
-  if (radius > targetRadius) {
-    radius -= 100.0f * fdt;
-    if (radius < targetRadius) radius = targetRadius;
-  }
+  if (radius < targetRadius) radius += 100.0f * fdt;
+  if (radius > targetRadius) radius -= 100.0f * fdt;
 
   if (pos.y > screenHeight - radius && vel.y > 0.0f) {
     pos.y = screenHeight - radius;
