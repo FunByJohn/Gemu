@@ -6,7 +6,7 @@
 
 Player::Player(sf::Vector2f position) {
 	pos = position;
-  vel.x = 250.0f;
+  vel.x = 0.0f;
   drawAngle = 0.0f;
   eyeIrisAngle = 0.0f;
   cooldown = 0.0f;
@@ -14,6 +14,7 @@ Player::Player(sf::Vector2f position) {
 
 void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
   float fdt = dt.asSeconds();
+  if(state != FREE) fdt *= drawSlowdown;
   animation += dt;
 
   if (state == FREE && cooldown > 0.0f) {
