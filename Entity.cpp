@@ -1,5 +1,8 @@
 #include "Entity.hpp"
 
-void Entity::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {}
+void Entity::tick(const sf::Time& dt, Entity::container& entities) {
+	pos += vel * dt.asSeconds();
+}
+
 Entity::~Entity() {}
 
