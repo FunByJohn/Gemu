@@ -13,6 +13,7 @@
 #include "Player.hpp"
 #include "ParticleSystem.hpp"
 #include "GoodThing.hpp"
+#include "Enemy.hpp"
 
 void clearScreen(sf::Uint8* pixels) {
     for(int i = 0; i < screenWidth * screenHeight * 4; i++) pixels[i] = 0xFF;
@@ -57,6 +58,7 @@ int main() {
     entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
 
+    entities.emplace_back(new Enemy({100.f, 100.f}, player));
     //entities.emplace_back(new GoodThing({100.f, 20.f}, player));
     //entities.emplace_back(new GoodThing({380.f, 60.f}, player));
 
@@ -82,7 +84,8 @@ int main() {
 
             //if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
 
-            for(auto& ptr : entities) ptr->tick(frameTime, entities);
+            sf::Time fTime = player->state == Player::FREE ? frameTime : frameTime / drawSlowdown;
+            for(auto& ptr : entities) ptr->tick(fTime, entities);
 
             // Update camera
             //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
