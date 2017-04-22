@@ -19,6 +19,7 @@ public:
 	const float cooldownTime = 1.0f;
 
 	const float innerRadius = 15.f;
+	const float outerRadius = 20.f;
 
 	float drawAngle;
 	sf::Vector2f drawLast;

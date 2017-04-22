@@ -113,17 +113,18 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 			}
 	}
 
-	if (pos.y > screenHeight - 20.0f && vel.y > 0.0f) {
+	if (pos.y > screenHeight - outerRadius && vel.y > 0.0f) {
 		vel.y = 0.0f;
-		pos.y = screenHeight - 20.0f;
+		pos.y = screenHeight - outerRadius;
 	}
+
+	if(pos.x - outerRadius < 0) vel.x = 0, pos.x = outerRadius;
+	else if(pos.x + outerRadius >= screenWidth) vel.x = 0, pos.x = screenWidth - outerRadius;
 }
 
 void Player::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	float anim = animation.asSeconds();
 	float fillPercent = (cooldown < 0.001f ? 1.0f : (1.0f - (cooldown / cooldownTime))); // 0.5f + 0.5f * sin(anim * 5.0f);
-	float innerRadius = 15.0f; // 30
-	float outerRadius = 20.0f; // - (5.0f * (1.0f - fillPercent)); // 40
 	float eyeRadius = innerRadius * 0.7f;
 	float eyeIrisDistance = 0.8f;
 	//float eyeIrisAngle = atan2(vel.y, vel.x); // 2.0f * M_PI * anim;
