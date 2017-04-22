@@ -4,8 +4,12 @@
 
 class Bubble : public Entity {
 public:
+  const float totalAliveTime = 4.0f;
+
   float radius;
   float targetRadius;
+  float aliveTime;
+
 
 	Bubble(sf::Vector2f pos, float radius);
 
