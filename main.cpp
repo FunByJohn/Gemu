@@ -57,8 +57,8 @@ int main() {
     entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
 
-    entities.emplace_back(new GoodThing({100.f, 20.f}, player));
-    entities.emplace_back(new GoodThing({380.f, 60.f}, player));
+    //entities.emplace_back(new GoodThing({100.f, 20.f}, player));
+    //entities.emplace_back(new GoodThing({380.f, 60.f}, player));
 
 
     std::deque<int> fpsAvg;
@@ -85,8 +85,8 @@ int main() {
             for(auto& ptr : entities) ptr->tick(frameTime, entities);
 
             // Update camera
-            camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
-            camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
+            //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
+            //camera.top = std::min(cameraFocus->pos.y - screenHeight / 2, maxCameraY - screenHeight);
 
         }
 

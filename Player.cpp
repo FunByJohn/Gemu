@@ -6,7 +6,6 @@
 
 Player::Player(sf::Vector2f position) {
 	pos = position;
-  vel.x = 250.0f;
   drawAngle = 0.0f;
   eyeIrisAngle = 0.0f;
   cooldown = 0.0f;
