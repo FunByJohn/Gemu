@@ -12,8 +12,9 @@ protected:
 
 public:
 	typedef std::unique_ptr<Entity> ptr;
+	typedef std::vector<ptr> container;
 
-	virtual void tick(const sf::Time& dt, std::vector<ptr>& entities);
+	virtual void tick(const sf::Time& dt, container& entities);
 	virtual void render(sf::Uint8* pixels, sf::FloatRect camera) = 0;
 
 	virtual ~Entity();
