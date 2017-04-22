@@ -13,10 +13,10 @@ public:
 		FOLLOWING
 	};
 
-  const float drawLineDistance = 20.0f;
-  const int drawNumClouds = 12;
-  const float followVelocity = 400.0f; //400.0f;
-  const float cooldownTime = 1.0f;
+	const float drawLineDistance = 20.0f;
+	const int drawNumClouds = 12;
+	const float followVelocity = 400.0f; //400.0f;
+	const float cooldownTime = 1.0f;
 
 	const float innerRadius = 15.f;
 
