@@ -12,6 +12,7 @@ Player::Player(sf::Vector2f position) {
 	drawAngle = 0.0f;
 	eyeIrisAngle = 0.0f;
 	cooldown = 0.0f;
+	id = Entity::PLAYER;
 
 	bubbleConfs[0] = {250.f, 6};
 	bubbleConfs[1] = {600.f, 7};
