@@ -26,3 +26,21 @@ float hypotSq(float x, float y) {
 bool hypotSqPred(float x, float y, float z) {
   return x * x + y * y <= z * z;
 }
+
+float rotateTo(float from, float to, float step) {
+  float a = fmax(from, to) - fmin(from, to);
+  float b = ((-M_PI + fmin(from, to)) + (M_PI - fmax(from, to))) + 2.0f * M_PI;
+
+  if(a < b) {
+    step = a < step ? a : step;
+    from += from < to ? step : -step;
+  } else {
+    step = b < step ? b : step;
+    from += from < to ? -step : step;
+  }
+
+  from = from < -M_PI ? from + 2.0f * M_PI : from;
+  from = from > M_PI ? from - 2.0f * M_PI : from;
+
+  return from;
+}

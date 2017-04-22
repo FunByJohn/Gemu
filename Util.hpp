@@ -12,3 +12,4 @@ void setPixel(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f pos, sf::Col
 
 float hypotSq(float x, float y);
 bool hypotSqPred(float x, float y, float z);
+float rotateTo(float from, float to, float step);
