@@ -11,3 +11,10 @@ void setPixel(sf::Uint8* pixels, int x, int y, sf::Color color) {
     pixels[i+3] = color.a;
 }
 
+float hypotSq(float x, float y) {
+  return x * x + y * y;
+}
+
+bool hypotSqPred(float x, float y, float z) {
+  return x * x + y * y <= z * z;
+}

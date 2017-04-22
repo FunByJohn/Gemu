@@ -6,7 +6,7 @@
 
 class Entity {
 protected:
-	sf::Time animation;
+	sf::Time animation = sf::Time::Zero;
 	sf::Vector2f pos;
 	sf::Vector2f vel;
 
@@ -18,5 +18,3 @@ public:
 
 	virtual ~Entity();
 };
-
-
