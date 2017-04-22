@@ -11,11 +11,10 @@ else
 	CXXFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 endif
 
-CXXFLAGS += -std=c++14
+CXXFLAGS += -std=c++14 -Wno-narrowing
 
 
 $(EXE): $(OBJS)
-	@echo $(DEP)
 	$(CXX) $^ -o $(EXE) $(CXXFLAGS)
 
 -include $(DEP)
@@ -24,6 +23,6 @@ $(EXE): $(OBJS)
 	$(CXX) $(CXXFLAGS) -MMD -c -o $@ $<
 
 clean:
-	rm -r $(OBJS) $(EXE)
+	rm -r $(DEP) $(OBJS) $(EXE)
 
 
