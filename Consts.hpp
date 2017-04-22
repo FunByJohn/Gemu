@@ -6,3 +6,5 @@ extern int screenScale;
 
 extern int frameRate;
 
+extern float drawSlowdown;
+

@@ -6,3 +6,5 @@ int screenScale = 4;
 
 int frameRate = 60;
 
+float drawSlowdown = 10.f;
+
