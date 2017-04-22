@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "ParticleSystem.hpp"
 #include "Player.hpp"
 #include "Util.hpp"
 #include "Consts.hpp"
@@ -12,9 +13,9 @@ Player::Player(sf::Vector2f position) {
 }
 
 void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
-  float fdt = dt.asSeconds();
-  if(state != FREE) fdt *= drawSlowdown;
-  animation += dt;
+  sf::Time rdt = (state != FREE ? dt * drawSlowdown : dt);
+  float fdt = rdt.asSeconds();
+  animation += rdt;
 
   if (state == FREE && cooldown > 0.0f) {
     cooldown -= fdt;
@@ -204,3 +205,11 @@ void Player::drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f cen
     }
   }
 }
+
+void Player::kill() {
+    if(!dead) {
+        dead = true;
+        ParticleSystem::getInstance()->explode(pos);
+    }
+}
+

@@ -3,6 +3,9 @@
 #include "Entity.hpp"
 
 class Player : public Entity {
+private:
+	bool dead = false;
+
 public:
 	enum State {
 		FREE,
@@ -14,6 +17,8 @@ public:
   const int drawNumClouds = 12;
   const float followVelocity = 400.0f; //400.0f;
   const float cooldownTime = 1.0f;
+
+	const float innerRadius = 15.f;
 
 	float drawAngle;
 	sf::Vector2f drawLast;
@@ -34,5 +39,7 @@ public:
 
 	void tick(const sf::Time& dt, std::vector<Entity::ptr>& entities);
 	void render(sf::Uint8* pixels, sf::FloatRect& camera);
-  void drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f center);
+  	void drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f center);
+
+	void kill();
 };

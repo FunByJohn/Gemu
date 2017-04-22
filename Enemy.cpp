@@ -20,7 +20,13 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 	   pos.y + radius >= screenHeight && vel.y > 0) angle = atan2(-vel.y, vel.x);
 
 	float toPlayer = atan2(player->pos.y - pos.y, player->pos.x - pos.x);
-	//if(hypotSqPred(player->pos.y - posy, player->pos.x - pos.x, 1.f))
+
+	// Hit detection
+	if(hypotSqPred(player->pos.y - pos.y, player->pos.x - pos.x, player->innerRadius + radius)) {
+		player->kill();
+	}
+
+
 	angle = rotateTo(angle, toPlayer, M_PI * fdt);
 	vel.x = cos(angle) * speed;
 	vel.y = sin(angle) * speed;
