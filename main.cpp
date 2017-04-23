@@ -58,7 +58,6 @@ int main() {
     std::vector<Entity::ptr> entities;
     entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
-    entities.emplace_back(new Bubble({ 300.0f, 100.0f }, 30.0f));
 
     entities.emplace_back(new Enemy({100.f, 100.f}, player));
     //entities.emplace_back(new GoodThing({100.f, 20.f}, player));

@@ -1,6 +1,7 @@
 #include "Enemy.hpp"
 #include "Util.hpp"
 #include "Consts.hpp"
+#include "Bubble.hpp"
 
 #include <cmath>
 
@@ -15,22 +16,53 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 	const float speed = 300.f;
 	float fdt = dt.asSeconds();
 
-	if(pos.x - radius <= 0 && vel.x < 0 ||
-	   pos.x + radius >= screenWidth && vel.x > 0) angle = atan2(vel.y, -vel.x);
-	if(pos.y - radius <= 0 && vel.y < 0 ||
-	   pos.y + radius >= screenHeight && vel.y > 0) angle = atan2(-vel.y, vel.x);
+  switch(state) {
+    case FOLLOW:
+    {
+      if(pos.x - radius <= 0 && vel.x < 0 ||
+    	   pos.x + radius >= screenWidth && vel.x > 0) angle = atan2(vel.y, -vel.x);
+    	if(pos.y - radius <= 0 && vel.y < 0 ||
+    	   pos.y + radius >= screenHeight && vel.y > 0) angle = atan2(-vel.y, vel.x);
 
-	float toPlayer = atan2(player->pos.y - pos.y, player->pos.x - pos.x);
+    	float toPlayer = atan2(player->pos.y - pos.y, player->pos.x - pos.x);
 
-	// Hit detection
-	if(hypotSqPred(player->pos.y - pos.y, player->pos.x - pos.x, player->innerRadius + radius)) {
-		player->kill();
-	}
+    	// Hit detection
+    	if(hypotSqPred(player->pos.y - pos.y, player->pos.x - pos.x, player->innerRadius + radius)) {
+    		player->kill();
+    	}
 
+    	angle = rotateTo(angle, toPlayer, M_PI * fdt);
+    	vel.x = cos(angle) * speed;
+    	vel.y = sin(angle) * speed;
 
-	angle = rotateTo(angle, toPlayer, M_PI * fdt);
-	vel.x = cos(angle) * speed;
-	vel.y = sin(angle) * speed;
+      for (auto& entity : entities) {
+        if (entity->id == Entity::BUBBLE) {
+          Bubble* bubble = (Bubble*)entity.get();
+          if (hypotSqPred(pos.x - entity->pos.x, pos.y - entity->pos.y, radius + bubble->radius)) {
+            state = BUBBLE;
+            vel.x = 0.0f;
+            vel.y = 0.0f;
+            bubblePos = entity->pos;
+            diePos = pos;
+            animation = sf::Time::Zero;
+            bubble->aliveTime = 0.0f; // sin(pi * (1/2)x)
+            bubble->targetRadius *= 1.5f;
+          }
+        }
+      }
+
+      break;
+    }
+    case BUBBLE:
+    {
+      float anim = 5.0f * animation.asSeconds();
+      float t = sin(M_PI * (1.0f / 2.0f) * anim); //anim * anim * anim;
+      if (anim > 1.0f) t = 1.0f;
+      pos.x = diePos.x + (bubblePos.x - diePos.x) * t;
+      pos.y = diePos.y + (bubblePos.y - diePos.y) * t;
+      break;
+    }
+  }
 }
 
 void Enemy::render(sf::Uint8* pixels, sf::FloatRect& camera) {
