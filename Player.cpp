@@ -246,7 +246,8 @@ void Player::drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f cen
 
 void Player::kill() {
 	if(!dead) {
-		dead = true;
 		ParticleSystem::getInstance()->explode(pos);
+		pos = {50.f, 50.f};
+		//dead = true;
 	}
 }

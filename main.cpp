@@ -39,6 +39,9 @@ void nextWave(int n, Entity::container& entities, Player* player) {
             break;
 
         default:
+            for(int i = 0; i < n; i++) {
+                entities.emplace_back(new Enemy({0.f + rand() % screenWidth, 0.f + rand() % screenHeight}, player));
+            }
             break;
     }
 }
