@@ -13,7 +13,8 @@ Enemy::Enemy(sf::Vector2f pos, Player* player) : player(player) {
 void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 	Entity::tick(dt, entities);
 
-	const float speed = 300.f;
+  float anim = animation.asSeconds();
+	const float speed = 200.f + 170.0f * sin(2.0f * M_PI * anim); // 300.0f
 	float fdt = dt.asSeconds();
 
   switch(state) {
@@ -47,6 +48,7 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
             animation = sf::Time::Zero;
             bubble->aliveTime = 0.0f; // sin(pi * (1/2)x)
             bubble->targetRadius *= 1.5f;
+            bubble->taken = true;
           }
         }
       }
@@ -55,11 +57,16 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
     }
     case BUBBLE:
     {
-      float anim = 5.0f * animation.asSeconds();
-      float t = sin(M_PI * (1.0f / 2.0f) * anim); //anim * anim * anim;
-      if (anim > 1.0f) t = 1.0f;
+      float anim2 = 5.0f * animation.asSeconds();
+      float t = sin(M_PI * (1.0f / 2.0f) * anim2); //anim * anim * anim;
+      if (anim2 > 1.0f) t = 1.0f;
       pos.x = diePos.x + (bubblePos.x - diePos.x) * t;
       pos.y = diePos.y + (bubblePos.y - diePos.y) * t;
+      radius -= 10.0f * fdt;
+      if (radius < 0.0f) {
+        radius = 0.0f;
+        dead = true;
+      }
       break;
     }
   }

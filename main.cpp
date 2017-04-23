@@ -59,7 +59,9 @@ int main() {
     entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
 
-    entities.emplace_back(new Enemy({100.f, 100.f}, player));
+    entities.emplace_back(new Enemy({50.f, 50.f}, player));
+    entities.emplace_back(new Enemy({screenWidth - 50.f, 50.f}, player));
+
     //entities.emplace_back(new GoodThing({100.f, 20.f}, player));
     //entities.emplace_back(new GoodThing({380.f, 60.f}, player));
 

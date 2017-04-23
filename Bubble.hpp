@@ -9,7 +9,7 @@ public:
   float radius;
   float targetRadius;
   float aliveTime;
-
+  bool taken; // ;^
 
 	Bubble(sf::Vector2f pos, float radius);
 

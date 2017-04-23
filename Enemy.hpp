@@ -15,7 +15,7 @@ private:
   sf::Vector2f bubblePos;
   sf::Vector2f diePos;
 
-	const float radius = 20.f;
+	float radius = 20.f;
 
 public:
 
