@@ -250,4 +250,3 @@ void Player::kill() {
 		ParticleSystem::getInstance()->explode(pos);
 	}
 }
-

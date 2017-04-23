@@ -12,7 +12,7 @@ Enemy::Enemy(sf::Vector2f pos, Player* player) : player(player) {
 void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 	Entity::tick(dt, entities);
 
-	const float speed = 400.f;
+	const float speed = 300.f;
 	float fdt = dt.asSeconds();
 
 	if(pos.x - radius <= 0 && vel.x < 0 ||

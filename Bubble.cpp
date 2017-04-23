@@ -7,8 +7,9 @@
 Bubble::Bubble(sf::Vector2f pos, float radius) {
 	id = Entity::BUBBLE;
 	this->pos = pos;
-  	this->targetRadius = radius;
-  	this->radius = 0.0f;
+  this->targetRadius = radius;
+  this->radius = 0.0f;
+  this->aliveTime = 0.0f;
 }
 
 void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
@@ -16,22 +17,27 @@ void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
 
 	float fdt = dt.asSeconds();
 
+  aliveTime += fdt;
+
 	/*if(pos.x - radius <= 0 && vel.x < 0 ||
 	   pos.x + radius >= screenWidth && vel.x > 0) angle = atan2(vel.y, -vel.x);
 	if(pos.y - radius <= 0 && vel.y < 0 ||
 	   pos.y + radius >= screenHeightx && vel.y > 0) angle = atan2(-vel.y, vel.x);*/
 
-  vel.y += 1.0f * fdt;
+  vel.y += 0.1f * fdt;
+
   pos.x += vel.x * fdt;
   pos.y += vel.y * fdt;
 
   if (radius < targetRadius) radius += 100.0f * fdt;
   if (radius > targetRadius) radius -= 100.0f * fdt;
 
-  if (pos.y > screenHeight - radius && vel.y > 0.0f) {
-    pos.y = screenHeight - radius;
-    vel.y *= -0.6f;
-    targetRadius *= 0.9f;
+  if (aliveTime > totalAliveTime) {
+    targetRadius = 0.0f;
+  }
+
+  if (aliveTime > totalAliveTime && radius < 1.0f) {
+    dead = true;
   }
 }
 
