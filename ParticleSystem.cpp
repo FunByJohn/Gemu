@@ -78,9 +78,9 @@ void ParticleSystem::addParticle(Particle* particle) {
 	particles.emplace_back(particle);
 }
 
-void ParticleSystem::explode(sf::Vector2f pos) {
-	for(int i = 0; i < 10; i++) {
-		addParticle(new Particle({pos, {-100 + rand() % 200, -100 + rand() % 200}}, sf::seconds(1.f), Particle::CIRCLE, sf::Color::Black));
+void ParticleSystem::explode(sf::Vector2f pos, int count, sf::Color color) {
+	for(int i = 0; i < count; i++) {
+		addParticle(new Particle({pos, {-100 + rand() % 200, -100 + rand() % 200}}, sf::seconds(1.f), Particle::CIRCLE, color));
 	}
 }
 

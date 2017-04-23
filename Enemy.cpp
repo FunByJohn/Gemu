@@ -2,6 +2,8 @@
 #include "Util.hpp"
 #include "Consts.hpp"
 #include "Bubble.hpp"
+#include "SoundPlayer.hpp"
+#include "ParticleSystem.hpp"
 
 #include <cmath>
 
@@ -31,7 +33,13 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 
     	// Hit detection
     	if(hypotSqPred(player->pos.y - pos.y, player->pos.x - pos.x, player->innerRadius + radius)) {
-    		player->kill();
+
+			if(player->deadTime == sf::Time::Zero) {
+				angle = atan2(-vel.y, -vel.x);
+				ParticleSystem::getInstance()->explode(pos, 3, sf::Color::Blue);
+			}
+
+			player->kill();
     	}
 
       if (speed > 300.0f) {
@@ -57,6 +65,7 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
             bubble->aliveTime = 0.0f; // sin(pi * (1/2)x)
             bubble->targetRadius *= 1.5f;
             bubble->taken = true;
+            soundPlayer.play(Sound::SUCC);
           }
         } else if (entity->id == Entity::ENEMY) {
           if (collideFriendCooldown > 0.0f) continue;
@@ -70,7 +79,7 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
             }
           }
         }
-      }
+		  }
 
       break;
     }
@@ -85,7 +94,9 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
       if (radius < 0.0f) {
         radius = 0.0f;
         dead = true;
-      }
+		soundPlayer.play(Sound::EXPLO);
+    	ParticleSystem::getInstance()->explode(pos, 5, sf::Color::Blue);
+	  }
       break;
     }
   }

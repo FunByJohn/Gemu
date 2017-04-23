@@ -39,7 +39,7 @@ public:
 	static ParticleSystem* getInstance();
 
 	void addParticle(Particle* particle);
-	void explode(sf::Vector2f pos);
+	void explode(sf::Vector2f pos, int count = 10, sf::Color color = sf::Color::Black);
 
 	void tick(const sf::Time& dt, Entity::container& entities);
 	void render(sf::Uint8* pixels, sf::FloatRect& camera);

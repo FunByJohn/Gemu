@@ -15,6 +15,7 @@
 #include "GoodThing.hpp"
 #include "Enemy.hpp"
 #include "Bubble.hpp"
+#include "SoundPlayer.hpp"
 
 void clearScreen(sf::Uint8* pixels) {
     for(int i = 0; i < screenWidth * screenHeight * 4; i++) pixels[i] = 0xFF;
@@ -25,8 +26,7 @@ float abssin(float n) {
 }
 
 void nextWave(int n, Entity::container& entities, Player* player) {
-    //player->pos = {screenWidth / 2, screenHeight / 2};
-
+    soundPlayer.play(Sound::RDY);
 
     switch(n) {
         case 0:
@@ -102,6 +102,7 @@ int main() {
             nextWave(wave++, entities, player);
         }
 
+        soundPlayer.tick(sf::Time::Zero);
         waveTime -= dt;
 
         // Ensure framerate
@@ -109,10 +110,20 @@ int main() {
         if(acc >= frameTime) {
             acc -= frameTime;
 
-            sf::Time fTime = player->state == Player::FREE ? frameTime : frameTime / drawSlowdown;
+            sf::Time fTime = (player->state == Player::FREE) ? frameTime : frameTime / drawSlowdown;
             std::vector<Entity*> cop;
             for(auto& ptr : entities) cop.push_back(ptr.get());
             for(auto ptr : cop) ptr->tick(fTime, entities);
+
+            // We don't want to remove player, reset game instead
+            if(player->dead) {
+                for(auto& ptr : entities)
+                    if(ptr->id == Entity::ENEMY) ptr->dead = true;
+
+                player->reset();
+                wave = 0;
+                waveTime = sf::seconds(2);
+            }
 
             // Remove dead entities
             entities.erase(std::remove_if(entities.begin(), entities.end(),
