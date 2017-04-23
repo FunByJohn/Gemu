@@ -54,6 +54,11 @@ int main() {
     window.setVerticalSyncEnabled(true);
 #endif
 
+    sf::Music music;
+    music.openFromFile("res/music.ogg");
+    music.setLoop(true);
+    music.play();
+
     sf::Texture screen;
     if(!screen.create(screenWidth, screenHeight)) {
         std::cout << "Creation of screen texture failed!" << std::endl;
