@@ -26,8 +26,7 @@ float abssin(float n) {
 }
 
 void nextWave(int n, Entity::container& entities, Player* player) {
-    //player->pos = {screenWidth / 2, screenHeight / 2};
-
+    soundPlayer.play(Sound::RDY);
 
     switch(n) {
         case 0:
@@ -111,7 +110,7 @@ int main() {
         if(acc >= frameTime) {
             acc -= frameTime;
 
-            sf::Time fTime = player->state == Player::FREE ? frameTime : frameTime / drawSlowdown;
+            sf::Time fTime = (player->state == Player::FREE) ? frameTime : frameTime / drawSlowdown;
             std::vector<Entity*> cop;
             for(auto& ptr : entities) cop.push_back(ptr.get());
             for(auto ptr : cop) ptr->tick(fTime, entities);

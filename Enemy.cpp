@@ -31,7 +31,13 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
 
     	// Hit detection
     	if(hypotSqPred(player->pos.y - pos.y, player->pos.x - pos.x, player->innerRadius + radius)) {
-    		player->kill();
+
+			if(player->deadTime == sf::Time::Zero) {
+				angle = atan2(-vel.y, -vel.x);
+				ParticleSystem::getInstance()->explode(pos, 3, sf::Color::Blue);
+			}
+
+			player->kill();
     	}
 
     	angle = rotateTo(angle, toPlayer, M_PI * fdt);

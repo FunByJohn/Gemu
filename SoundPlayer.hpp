@@ -13,7 +13,8 @@ namespace Sound {
 		SUCC,
 		DED,
 		GOGO,
-		HURT
+		HURT,
+		RDY
 	};
 }
 

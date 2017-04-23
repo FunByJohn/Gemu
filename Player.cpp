@@ -279,6 +279,7 @@ void Player::reset() {
 void Player::kill() {
 	if(deadTime == sf::Time::Zero) {
 		deadTime = animation;
+		state = FREE;
 		ParticleSystem::getInstance()->explode(pos, 3);
 		soundPlayer.play(Sound::HURT);
 	}
