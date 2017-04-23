@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 
 #include "ParticleSystem.hpp"
 #include "Util.hpp"
@@ -14,6 +15,8 @@ Particle::Particle(sf::Vector2f pos, sf::Vector2f vel, sf::Vector2f acc, sf::Tim
 	this->liveTime = liveTime;
 	this->type = type;
 	this->color = color;
+
+	baseRadius = 3 + rand() % 3;
 }
 
 Particle::Particle(std::vector<sf::Vector2f> opt, sf::Time liveTime, Particle::Type type, sf::Color color) {
@@ -23,6 +26,8 @@ Particle::Particle(std::vector<sf::Vector2f> opt, sf::Time liveTime, Particle::T
 	this->liveTime = liveTime;
 	this->type = type;
 	this->color = color;
+
+	baseRadius = 3 + rand() % 3;
 }
 
 void Particle::tick(const sf::Time& dt, Entity::container& entities) {
@@ -32,10 +37,27 @@ void Particle::tick(const sf::Time& dt, Entity::container& entities) {
 }
 
 void Particle::render(sf::Uint8* pixels, sf::FloatRect& camera) {
+	float anim = elapsed.asSeconds() + pos.x;
+
 	switch(type) {
 		case PIXEL:
 			setPixel(pixels, camera, pos, color);
 			break;
+		case CIRCLE: {
+			float offsetX = 2.f * (0.2f * cos(12.f * anim));
+			float offsetY = 2.f * (0.1f * sin(18.f * anim));
+			float radius = baseRadius + (0.3 * sin(3.f * M_PI * anim));
+
+			int r = (int)radius + 2;
+			for(int x = -r; x < r; x++) {
+				for(int y = -r; y < r; y++) {
+					if(hypotSqPred(x + offsetX, y + offsetY, radius)) {
+						setPixel(pixels, camera, {pos.x + x, pos.y + y}, color);
+					}
+				}
+			}
+			break;
+		}
 	}
 }
 
@@ -57,8 +79,8 @@ void ParticleSystem::addParticle(Particle* particle) {
 }
 
 void ParticleSystem::explode(sf::Vector2f pos) {
-	for(int i = 0; i < 100; i++) {
-		addParticle(new Particle({pos, {-100 + rand() % 200, -100 + rand() % 200}}, sf::seconds(1.f), Particle::PIXEL, sf::Color::Black));
+	for(int i = 0; i < 10; i++) {
+		addParticle(new Particle({pos, {-100 + rand() % 200, -100 + rand() % 200}}, sf::seconds(1.f), Particle::CIRCLE, sf::Color::Black));
 	}
 }
 

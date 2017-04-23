@@ -6,12 +6,14 @@
 class Particle : public Entity {
 private:
 	sf::Vector2f acc;
+	int baseRadius;
 
 public:
 	typedef std::unique_ptr<Particle> ptr;
 
 	enum Type {
-		PIXEL
+		PIXEL,
+		CIRCLE
 	};
 
 	Type type;
