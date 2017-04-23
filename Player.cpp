@@ -94,7 +94,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 					}
 
 					// Finish drawing
-					if (followPoints.size() == drawNumClouds) {
+					if (followPoints.size() == drawNumClouds || !sf::Joystick::isButtonPressed(0, 0)) {
 						state = FOLLOWING;
 						// init following
 						followMovedDistance = 0.0f;
@@ -144,7 +144,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 					vel.x = followVelocity * cos(followLaunchAngle);
 					vel.y = followVelocity * sin(followLaunchAngle);
 					state = FREE;
-					cooldown = cooldownTime;
+					cooldown = cooldownTime * ((float)followPoints.size() / (float)drawNumClouds);
 				}
 				break;
 			}
