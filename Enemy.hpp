@@ -3,17 +3,20 @@
 #include "Player.hpp"
 
 class Enemy : public Entity {
-private:
+public:
   enum State {
 		FOLLOW,
     BUBBLE
 	};
+
+  const float collideFriendTotalCooldown = 0.2f;
 
   State state = FOLLOW;
 	Player* player;
 	float angle = 0;
   sf::Vector2f bubblePos;
   sf::Vector2f diePos;
+  float collideFriendCooldown;
 
 	float radius = 20.f;
 

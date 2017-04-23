@@ -8,6 +8,8 @@
 Enemy::Enemy(sf::Vector2f pos, Player* player) : player(player) {
 	this->pos = pos;
 	id = Entity::ENEMY;
+  collideFriendCooldown = 0.0f;
+  animation = sf::seconds((pos.y * screenWidth + pos.x) * 0.1f);
 }
 
 void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
@@ -32,14 +34,20 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
     		player->kill();
     	}
 
-    	angle = rotateTo(angle, toPlayer, M_PI * fdt);
+      if (speed > 300.0f) {
+    	   angle = rotateTo(angle, toPlayer, M_PI * fdt);
+      }
     	vel.x = cos(angle) * speed;
     	vel.y = sin(angle) * speed;
+
+      if (collideFriendCooldown > 0.0f) {
+        collideFriendCooldown -= fdt;
+      }
 
       for (auto& entity : entities) {
         if (entity->id == Entity::BUBBLE) {
           Bubble* bubble = (Bubble*)entity.get();
-          if (hypotSqPred(pos.x - entity->pos.x, pos.y - entity->pos.y, radius + bubble->radius)) {
+          if (!bubble->taken && hypotSqPred(pos.x - entity->pos.x, pos.y - entity->pos.y, radius + bubble->radius)) {
             state = BUBBLE;
             vel.x = 0.0f;
             vel.y = 0.0f;
@@ -49,6 +57,17 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
             bubble->aliveTime = 0.0f; // sin(pi * (1/2)x)
             bubble->targetRadius *= 1.5f;
             bubble->taken = true;
+          }
+        } else if (entity->id == Entity::ENEMY) {
+          if (collideFriendCooldown > 0.0f) continue;
+          if (entity.get() != this) {
+            if (hypotSqPred(entity->pos.x - pos.x, entity->pos.y - pos.y, radius * 2)) {
+              Enemy* other = (Enemy*)entity.get();
+              angle = atan2(entity->pos.y - pos.y, entity->pos.x - pos.x);
+              other->angle = angle + M_PI;
+              collideFriendCooldown = collideFriendTotalCooldown;
+              other->collideFriendCooldown = collideFriendTotalCooldown;
+            }
           }
         }
       }

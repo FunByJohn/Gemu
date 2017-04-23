@@ -39,7 +39,7 @@ void nextWave(int n, Entity::container& entities, Player* player) {
             break;
 
         default:
-            for(int i = 0; i < n; i++) {
+            for(int i = 0; i < n + 1; i++) {
                 entities.emplace_back(new Enemy({0.f + rand() % screenWidth, 0.f + rand() % screenHeight}, player));
             }
             break;
@@ -143,7 +143,6 @@ int main() {
 
         // end the current frame
         window.display();
-
 
         // Calculate framerate
         fpsAvg.push_back(1000000.f / dt.asMicroseconds());
