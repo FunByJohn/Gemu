@@ -24,6 +24,25 @@ float abssin(float n) {
     return fabs(sin(n));
 }
 
+void nextWave(int n, Entity::container& entities, Player* player) {
+    //player->pos = {screenWidth / 2, screenHeight / 2};
+
+
+    switch(n) {
+        case 0:
+            entities.emplace_back(new Enemy({40.f, 100.f}, player));
+            break;
+
+        case 1:
+            entities.emplace_back(new Enemy({40.f, 100.f}, player));
+            entities.emplace_back(new Enemy({200.f, 100.f}, player));
+            break;
+
+        default:
+            break;
+    }
+}
+
 int main() {
     // create the window
     sf::RenderWindow window(sf::VideoMode(screenWidth * screenScale, screenHeight * screenScale), "Gemu");
@@ -58,14 +77,11 @@ int main() {
     std::vector<Entity::ptr> entities;
     entities.emplace_back(ParticleSystem::getInstance());
     entities.emplace_back(player);
-    entities.emplace_back(new Bubble({ 300.0f, 100.0f }, 30.0f));
-
-    entities.emplace_back(new Enemy({100.f, 100.f}, player));
-    //entities.emplace_back(new GoodThing({100.f, 20.f}, player));
-    //entities.emplace_back(new GoodThing({380.f, 60.f}, player));
 
 
+    int wave = 0;
     std::deque<int> fpsAvg;
+    sf::Time waveTime = sf::seconds(2);
     sf::Time frameTime = sf::seconds(1.f / frameRate);
     sf::Time acc = sf::Time::Zero;
     sf::Clock clock;
@@ -79,12 +95,16 @@ int main() {
 
         sf::Time dt = clock.restart();
 
+        if(waveTime > sf::Time::Zero && waveTime - dt <= sf::Time::Zero) {
+            nextWave(wave++, entities, player);
+        }
+
+        waveTime -= dt;
+
         // Ensure framerate
         acc += dt;
         if(acc >= frameTime) {
             acc -= frameTime;
-
-            //if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) particleSystem->explode({0.5 * screenWidth + rand() % 100, 0.5 * screenHeight + rand() % 100});
 
             sf::Time fTime = player->state == Player::FREE ? frameTime : frameTime / drawSlowdown;
             std::vector<Entity*> cop;
@@ -96,6 +116,11 @@ int main() {
                                          [](auto& ptr){ return ptr->dead; }),
                             entities.end());
 
+
+            int enemyCount = 0;
+            for(auto& ptr : entities) enemyCount += ptr->id == Entity::ENEMY ? 1 : 0;
+
+            if(enemyCount == 0 && waveTime < sf::Time::Zero) waveTime = sf::seconds(2.f);
 
             // Update camera
             //camera.left = std::max(0.f, std::min(cameraFocus->pos.x - screenWidth / 2, maxCameraX - screenWidth));
