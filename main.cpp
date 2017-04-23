@@ -53,6 +53,7 @@ int main() {
 #ifdef VSYNC
     window.setVerticalSyncEnabled(true);
 #endif
+    window.setVerticalSyncEnabled(true);
 
     sf::Music music;
     music.openFromFile("res/music.ogg");
