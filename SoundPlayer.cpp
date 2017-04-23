@@ -9,6 +9,7 @@ SoundPlayer::SoundPlayer() {
 	buffers[Sound::SUCC].loadFromFile("res/succ.wav");
 	buffers[Sound::DED].loadFromFile("res/ded.wav");
 	buffers[Sound::GOGO].loadFromFile("res/gogo.wav");
+	buffers[Sound::HURT].loadFromFile("res/hurt.wav");
 }
 
 

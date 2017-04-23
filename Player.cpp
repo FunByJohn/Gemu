@@ -28,6 +28,16 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 		cooldown -= fdt;
 	}
 
+	if(deadTime != sf::Time::Zero) {
+		if(animation - deadTime > sf::seconds(2)) {
+			dead = true;
+			ParticleSystem::getInstance()->explode(pos);
+			soundPlayer.play(Sound::DED);
+		}
+
+		return;
+	}
+
 	switch(state) {
 		case FREE:
 			{
@@ -173,6 +183,14 @@ void Player::render(sf::Uint8* pixels, sf::FloatRect& camera) {
 	float eyeBorder = 0.1f;
 	float angleOffset = 0.3f * sin(2.0 * M_PI * anim) - fmod(0.2f * pos.x - screenWidth * 0.5f, 2.0 * M_PI);
 
+	// handling of dead
+	if(deadTime != sf::Time::Zero) {
+		float elapsed = (animation - deadTime) / sf::seconds(2.f);
+		angleOffset += elapsed * 2 * M_PI * 10.f;
+		outerRadius = std::max(20.f - elapsed * 20.f, 15.f);
+		eyeRadius *= 1.f - elapsed;
+	}
+
 	// draw follow clouds
 	if (state == DRAWING || state == FOLLOWING) {
 		int i = 0;
@@ -248,10 +266,20 @@ void Player::drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f cen
 	}
 }
 
+void Player::reset() {
+	deadTime = sf::Time::Zero;
+	dead = false;
+	state = Player::FREE;
+	pos = {screenWidth / 2.f, screenHeight / 2.f};
+	vel = {0, 0};
+	innerRadius = 15.f;
+	outerRadius = 20.f;
+}
+
 void Player::kill() {
-	if(!dead) {
-		dead = true;
-		ParticleSystem::getInstance()->explode(pos);
-		soundPlayer.play(Sound::DED);
+	if(deadTime == sf::Time::Zero) {
+		deadTime = animation;
+		ParticleSystem::getInstance()->explode(pos, 3);
+		soundPlayer.play(Sound::HURT);
 	}
 }

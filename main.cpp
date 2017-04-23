@@ -121,10 +121,7 @@ int main() {
                 for(auto& ptr : entities)
                     if(ptr->id == Entity::ENEMY) ptr->dead = true;
 
-                player->dead = false;
-                player->state = Player::FREE;
-                player->pos = {screenWidth / 2.f, screenHeight / 2.f};
-                player->vel = {0, 0};
+                player->reset();
                 wave = 0;
                 waveTime = sf::seconds(2);
             }

@@ -12,7 +12,8 @@ namespace Sound {
 		EXPLO,
 		SUCC,
 		DED,
-		GOGO
+		GOGO,
+		HURT
 	};
 }
 
