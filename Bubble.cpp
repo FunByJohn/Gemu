@@ -2,6 +2,7 @@
 #include "Util.hpp"
 #include "Consts.hpp"
 
+#include "SoundPlayer.hpp"
 #include <cmath>
 
 Bubble::Bubble(sf::Vector2f pos, float radius) {
@@ -33,12 +34,13 @@ void Bubble::tick(const sf::Time& dt, Entity::container& entities) {
   if (radius < targetRadius) radius += 100.0f * fdt;
   if (radius > targetRadius) radius -= 100.0f * fdt;
 
-  if (aliveTime > totalAliveTime) {
+  if (aliveTime > totalAliveTime && targetRadius != 0.f) {
+	  soundPlayer.play(Sound::BUBOUT);
     targetRadius = 0.0f;
   }
 
   if (aliveTime > totalAliveTime && radius < 1.0f) {
-    dead = true;
+	  dead = true;
   }
 }
 

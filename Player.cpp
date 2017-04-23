@@ -6,6 +6,7 @@
 #include "Util.hpp"
 #include "Consts.hpp"
 #include "Bubble.hpp"
+#include "SoundPlayer.hpp"
 
 Player::Player(sf::Vector2f position) {
 	pos = position;
@@ -64,6 +65,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 				if (!hypotSqPred(drawCurr.x - drawLast.x, drawCurr.y - drawLast.y, drawLineDistance)) {
 					drawLast = drawCurr;
 					followPoints.emplace_back(drawCurr);
+					soundPlayer.play(Sound::BLIP);
 
 					// Check bubble
 					for(auto& conf : bubbleConfs) {
@@ -87,6 +89,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 
 							if(maxDist - minDist <= distEps) {
 								float r = std::sqrt((maxDist + minDist) / 2.f);
+								soundPlayer.play(Sound::BUBBLE);
 								entities.emplace_back(new Bubble(center, r));
 								madeBubble = true;
 							}
@@ -97,6 +100,7 @@ void Player::tick(const sf::Time& dt, std::vector<Entity::ptr>& entities) {
 					if (followPoints.size() == drawNumClouds) {
 						state = FOLLOWING;
 						// init following
+						soundPlayer.play(Sound::GOGO);
 						followMovedDistance = 0.0f;
 						auto it = followPoints.rbegin();
 						auto lastPoint = *it;
@@ -246,8 +250,8 @@ void Player::drawCloud(sf::Uint8* pixels, sf::FloatRect camera, sf::Vector2f cen
 
 void Player::kill() {
 	if(!dead) {
+		dead = true;
 		ParticleSystem::getInstance()->explode(pos);
-		pos = {50.f, 50.f};
-		//dead = true;
+		soundPlayer.play(Sound::DED);
 	}
 }

@@ -2,6 +2,8 @@
 #include "Util.hpp"
 #include "Consts.hpp"
 #include "Bubble.hpp"
+#include "SoundPlayer.hpp"
+#include "ParticleSystem.hpp"
 
 #include <cmath>
 
@@ -39,7 +41,7 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
       for (auto& entity : entities) {
         if (entity->id == Entity::BUBBLE) {
           Bubble* bubble = (Bubble*)entity.get();
-          if (hypotSqPred(pos.x - entity->pos.x, pos.y - entity->pos.y, radius + bubble->radius)) {
+          if (!bubble->taken && hypotSqPred(pos.x - entity->pos.x, pos.y - entity->pos.y, radius + bubble->radius)) {
             state = BUBBLE;
             vel.x = 0.0f;
             vel.y = 0.0f;
@@ -49,7 +51,8 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
             bubble->aliveTime = 0.0f; // sin(pi * (1/2)x)
             bubble->targetRadius *= 1.5f;
             bubble->taken = true;
-          }
+          	soundPlayer.play(Sound::SUCC);
+		  }
         }
       }
 
@@ -66,7 +69,9 @@ void Enemy::tick(const sf::Time& dt, Entity::container& entities) {
       if (radius < 0.0f) {
         radius = 0.0f;
         dead = true;
-      }
+		soundPlayer.play(Sound::EXPLO);
+    	ParticleSystem::getInstance()->explode(pos, 5, sf::Color::Blue);
+	  }
       break;
     }
   }

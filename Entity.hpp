@@ -7,7 +7,6 @@
 class Entity {
 protected:
 	sf::Time animation = sf::Time::Zero;
-	sf::Vector2f vel;
 
 public:
 	typedef std::unique_ptr<Entity> ptr;
@@ -21,6 +20,7 @@ public:
 
 	ID id;
 	sf::Vector2f pos;
+	sf::Vector2f vel;
 	bool dead = false;
 
 	virtual void tick(const sf::Time& dt, container& entities);
